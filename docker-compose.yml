@@ -1,41 +1,33 @@
 name: app_gntech
-version: '3.8'
-
-networks:
-  network_gntech:
-    driver: bridge
 
 services:
-  db:
+  gntech_mysql:
     image: mysql:8.0
     container_name: gntech_mysql
-    restart: always
     environment:
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: gntech_db
-      MYSQL_USER: gntech_user
-      MYSQL_PASSWORD: gntech_pass
-      MYSQL_ROOT_PASSWORD: root_pass
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-    networks:
-      - network_gntech
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+  gntech_backend:
+    build: ./backend
     container_name: gntech_backend
-    restart: always
     ports:
       - "8000:8000"
-    env_file:
-      - ./backend/.env
+    environment:
+      - DATABASE_URL=mysql+pymysql://root:root@gntech_mysql:3306/gntech_db
+      - OPENWEATHER_API_KEY=6f09094cb376fcbc0a49d8ed7a3a97be
     depends_on:
-      - db
-    networks:
-      - network_gntech
+      gntech_mysql:
+        condition: service_healthy
 
 volumes:
   mysql_data:
