@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from src.database import engine, Base
 from src.routers import weather
+import src.models
 
 # Cria as tabelas automaticamente na inicialização
 Base.metadata.create_all(bind=engine)
