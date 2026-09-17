@@ -1,0 +1,41 @@
+name: app_gntech
+version: '3.8'
+
+networks:
+  network_gntech:
+    driver: bridge
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: gntech_mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: gntech_db
+      MYSQL_USER: gntech_user
+      MYSQL_PASSWORD: gntech_pass
+      MYSQL_ROOT_PASSWORD: root_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - network_gntech
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: gntech_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+    networks:
+      - network_gntech
+
+volumes:
+  mysql_data:
