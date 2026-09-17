@@ -22,9 +22,10 @@ services:
     container_name: gntech_backend
     ports:
       - "8000:8000"
+    env_file:
+      - ./backend/.env
     environment:
       - DATABASE_URL=mysql+pymysql://root:root@gntech_mysql:3306/gntech_db
-      - OPENWEATHER_API_KEY=6f09094cb376fcbc0a49d8ed7a3a97be
     depends_on:
       gntech_mysql:
         condition: service_healthy
