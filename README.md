@@ -1,6 +1,7 @@
 # GnTech Weather API
 
-API para consulta e persistência de dados climáticos por cidade. O projeto foi estruturado para execução local em containers Docker, com a API FastAPI e um banco MySQL 8.0.
+API para consulta e persistência de dados climáticos por cidade.
+O projeto foi estruturado para execução local em containers Docker, com a API FastAPI e banco MySQL 8.0.
 
 Repositório: https://github.com/RegisSantos/app_gntech
 
@@ -33,7 +34,8 @@ Repositório: https://github.com/RegisSantos/app_gntech
 └── README.md
 ```
 
-O diretório `frontend/` existe na estrutura do repositório, mas atualmente não possui uma aplicação frontend implementada. O consumo deve ser feito pela API e por sua documentação interativa.
+O diretório `frontend/` existe na estrutura do repositório, mas atualmente não possui uma aplicação frontend implementada.
+O consumo deve ser feito pela API e por sua documentação interativa.
 
 ## Requisitos
 
@@ -43,9 +45,14 @@ Instale os seguintes itens antes de iniciar:
 2. **Docker Desktop** no Windows ou macOS, com Docker Compose habilitado; ou **Docker Engine + Docker Compose Plugin** no Linux.
 3. Uma conta e uma chave de API da [OpenWeather](https://openweathermap.org/api).
 
-Não é necessário instalar Python ou MySQL no host para executar a versão conteinerizada. O Python e o MySQL são fornecidos pelos respectivos containers.
+Não é necessário instalar Python ou MySQL no host para executar a versão conteinerizada.
+O Python e o MySQL são fornecidos pelos respectivos containers.
 
-## Clonando o Projeto
+==========================================
+Passo a Passo para Instalação e Execução:
+==========================================
+
+## Passo 1: Clonando o Projeto
 
 Execute em um terminal:
 
@@ -54,34 +61,19 @@ git clone https://github.com/RegisSantos/app_gntech.git
 cd app_gntech
 ```
 
-## Configuração do Banco e da API
+## Passo 2: Criando o arquivo de ambiente (.env)
 
-O `docker-compose.yml` cria automaticamente o serviço MySQL com estas configurações:
+O backend utiliza o arquivo `backend/.env` para receber as variáveis de ambiente do container.
+Depois de clonar o projeto, entre no diretório `backend` e copie o arquivo de exemplo:
 
-| Variável | Valor usado pelo Compose |
-| --- | --- |
-| Host para conexões feitas no host | `127.0.0.1` ou `localhost` |
-| Host usado pela API dentro do Docker | `gntech_mysql` |
-| Porta | `3306` |
-| Banco | `gntech_db` |
-| Usuário | `root` |
-| Senha | `root` |
-
-Se o avaliador utilizar um cliente MySQL local (MySQL Workbench, DBeaver ou outro), deve criar uma conexão para o banco do projeto usando os valores acima. O banco `gntech_db` também é criado pelo Compose na primeira inicialização.
-
-Mantenha as portas `3306` (MySQL) e `8000` (API) liberadas no firewall do host. A porta `3306` é necessária para conexões externas ao container do banco; a porta `8000` é necessária para acessar a API.
-
-### Criando o arquivo de ambiente
-
-O backend utiliza o arquivo `backend/.env` para receber as variáveis de ambiente do container. Depois de clonar o projeto, entre no diretório `backend` e copie o arquivo de exemplo:
-
+Linux ou macOS:
 ```bash
 cd backend
 cp .env.example .env
 cd ..
 ```
 
-No Windows PowerShell, use o comando equivalente:
+Windows PowerShell:
 
 ```powershell
 cd backend
@@ -91,9 +83,10 @@ cd ..
 
 O arquivo `.env` é ignorado pelo Git e deve ser mantido apenas no ambiente local.
 
-### Chave da OpenWeather
+## Passo 3: Configurar as variáveis e a chave OpenWeather
 
-Cada avaliador deve gerar sua própria `OPENWEATHER_API_KEY` no portal da [OpenWeather](https://openweathermap.org/api). A chave é obrigatória para as rotas de busca e salvamento do clima; sem ela, essas operações não funcionarão.
+Cada usuário deve gerar sua própria `OPENWEATHER_API_KEY` no portal da [OpenWeather](https://openweathermap.org/api).
+A chave é obrigatória para as rotas de busca e salvamento do clima; sem ela, essas operações não funcionarão.
 
 Abra o arquivo `backend/.env` recém-criado e substitua o valor de exemplo pela sua chave pessoal e ativa:
 
@@ -101,11 +94,13 @@ Abra o arquivo `backend/.env` recém-criado e substitua o valor de exemplo pela 
 OPENWEATHER_API_KEY=sua_chave_openweather
 ```
 
-Não utilize a chave de outra pessoa nem publique uma chave real no repositório. A aplicação lê `DATABASE_URL` e `OPENWEATHER_API_KEY` diretamente das variáveis de ambiente do container.
+Não utilize a chave de outra pessoa nem publique uma chave real no repositório.
+A aplicação lê `DATABASE_URL` e `OPENWEATHER_API_KEY` diretamente das variáveis de ambiente do container.
+A geração da chave de API no portal da [OpenWeather] é gratuita.
 
-## Executando com Docker
+## Passo 4: Subir os containers com Docker
 
-Na raiz do projeto, execute:
+Na raiz do projeto, execute o comando para construir e iniciar os serviços em segundo plano:
 
 ```bash
 docker compose up --build
@@ -125,15 +120,14 @@ Esse comando:
 4. Inicia a API na porta `8000`.
 5. A aplicação FastAPI cria automaticamente a tabela de históricos no banco durante sua inicialização.
 
-Portanto, não é necessário executar um script SQL ou criar manualmente a tabela `weather_logs`. Essa criação ocorre sempre que a aplicação FastAPI é inicializada, inclusive quando o container do backend sobe.
+Portanto, NÃO é necessário executar um script SQL ou criar manualmente a tabela `weather_logs`.
+Essa criação ocorre sempre que a aplicação FastAPI é inicializada, inclusive quando o container do backend sobe.
 
-Para executar em segundo plano:
+=========================
+Comandos úteis do Docker
+=========================
 
-```bash
-docker compose up --build -d
-```
-
-Para acompanhar os logs:
+Para acompanhar os logs em tempo real:
 
 ```bash
 docker compose logs -f gntech_backend
@@ -152,6 +146,25 @@ docker compose down -v
 ```
 
 O volume `mysql_data` preserva os dados entre reinicializações normais.
+
+## Passo 5: Configuração de Conexão com o Banco de Dados e a API
+
+O `docker-compose.yml` cria automaticamente o serviço MySQL com estas configurações:
+
+| Variável | Valor usado pelo Compose |
+| --- | --- |
+| Host para conexões feitas no host | `127.0.0.1` ou `localhost` |
+| Host usado pela API dentro do Docker | `gntech_mysql` |
+| Porta | `3306` |
+| Banco | `gntech_db` |
+| Usuário | `root` |
+| Senha | `root` |
+
+Se o usuário utilizar um cliente MySQL local (MySQL Workbench, DBeaver ou outro), deve criar uma conexão para o banco do projeto usando os valores acima.O banco `gntech_db` também é criado pelo Compose na primeira inicialização.
+
+Mantenha as portas `3306` (MySQL) e `8000` (API) liberadas no firewall do host.
+A porta `3306` é necessária para conexões externas ao container do banco; a porta `8000` é necessária para acessar a API.
+
 
 ## Acessando a API
 
