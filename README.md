@@ -208,6 +208,15 @@ curl -X POST "http://localhost:8000/weather/save?city=Sao%20Paulo"
 
 A rota retorna `201 Created` e persiste o resultado na tabela `weather_logs`.
 
+Resposta esperada:
+
+```json
+{"detail":"Method Not Allowed"}
+```
+
+Nesse caso, é definido na FastAPI que interações feitas diretamente no navegador só aceitam Requisição GET.
+Como nesse caso é uma requisição POST, "Method Not Allowed" não é um erro. É o resultado esperado.
+
 ### Consultar o histórico
 
 ```bash
