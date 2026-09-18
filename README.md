@@ -8,6 +8,7 @@ Repositório: https://github.com/RegisSantos/app_gntech
 ## Stack Principal
 
 - **Python 3.11**: linguagem da aplicação.
+- **React + Vue + TailwindCSS**: linguagens utilizadas no frontend da aplicação.
 - **FastAPI**: framework HTTP e geração da documentação OpenAPI.
 - **Uvicorn**: servidor ASGI usado para executar a API.
 - **SQLAlchemy**: mapeamento objeto-relacional e acesso ao banco.
