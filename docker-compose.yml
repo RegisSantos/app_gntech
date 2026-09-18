@@ -1,0 +1,44 @@
+name: app_gntech
+
+services:
+  gntech_mysql:
+    image: mysql:8.0
+    container_name: gntech_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: gntech_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  gntech_backend:
+    build: ./backend
+    container_name: gntech_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=mysql+pymysql://root:root@gntech_mysql:3306/gntech_db
+    env_file:
+      - ./backend/.env
+    depends_on:
+      gntech_mysql:
+        condition: service_healthy
+
+  gntech_frontend:
+    build: ./frontend
+    container_name: gntech_frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - gntech_backend
+
+volumes:
+  mysql_data:
