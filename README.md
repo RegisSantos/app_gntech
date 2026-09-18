@@ -34,8 +34,10 @@ Repositório: https://github.com/RegisSantos/app_gntech
 └── README.md
 ```
 
-O diretório `frontend/` existe na estrutura do repositório, mas atualmente não possui uma aplicação frontend implementada.
-O consumo deve ser feito pela API e por sua documentação interativa.
+No diretório `frontend/` foi criada uma dashboard interativa, para que o usuário possa executar as tarefas de consultar, salvar e visualizar as consultas direto pelo navegador.
+Quando os conteiners estiverem rodando na Docker, o usuário pode acessar a Dashboard em 'http://localhost:3000';
+
+Para mais informações sobre como rodar a Dashboard em ambiente de desenvolvimento, acesse a sessão 'Acessando a Dashboard' deste documento.
 
 ## Requisitos
 
@@ -174,6 +176,7 @@ Com os containers em execução, use:
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
 - OpenAPI JSON: http://localhost:8000/openapi.json
+- Dashboard Frontend: http://localhost:3000
 
 ### Healthcheck
 
@@ -253,13 +256,37 @@ Não é necessário enviar um corpo (`Body`) nessa requisição. Em caso de suce
 
 #### Testar pela interface da API
 
-Para testar a busca de clima, salvar dados e consultar o histórico pela interface interativa da API, acesse:
-
-http://localhost:8000/docs#/
+Para testar a busca de clima, salvar dados e consultar o histórico pela interface interativa da API, acesse: 'http://localhost:8000/docs#/'
 
 Na interface Swagger, selecione a operação desejada, clique em **Try it out**, informe a cidade quando necessário e execute em **Execute**. A operação `GET /weather/history` permite verificar os dados salvos na base.
 
-## Execução Local Opcional
+### Desenvolvimento Local do Frontend (Opcional)
+=======================
+Acessando a Dashboard
+=======================
+Caso prefira desenvolver o frontend fora do container Docker:
+
+1. Desabilite o conteiner ```gntech_frontend``` no Docker
+
+2. Entre na pasta `frontend`:
+   ```bash
+   cd frontend
+   ```
+
+3. Instale as dependências:
+```bash
+   npm install
+   ```
+
+4. Execute o servidor de desenvolvimento:
+```bash
+   npm run dev
+   ```
+
+5. Acesse a aplicação em 'http://localhost:3000';
+
+
+## Execução Backend Local (Opcional)
 
 A instalação local serve principalmente para habilitar autocomplete e análise de código na IDE. A execução recomendada para avaliação continua sendo via Docker, pois o valor padrão da conexão usa o hostname interno `gntech_mysql`.
 
